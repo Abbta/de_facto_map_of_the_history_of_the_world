@@ -1,5 +1,9 @@
-var map = document.querySelector("#map");
+document.addEventListener("DOMContentLoaded", function(event) { 
+  //do work
+  var map = document.querySelector("svg");
+});
 
+console.log(map);
 window.addEventListener("wheel", onWheel);
 
 var zoom = {
