@@ -25,27 +25,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
     
     var normalized;  
     var delta = event.wheelDelta;
-
-    if (delta) {
-      normalized = (delta % 120) == 0 ? delta / 120 : delta / 12;
-    } else {
-      delta = event.deltaY || event.detail || 0;
-      normalized = -(delta % 3 ? delta * 10 : delta / 3);
-    }
-    
-    var scaleDelta = normalized > 0 ? 1 / zoom.scaleFactor : zoom.scaleFactor;
-    
-    point.x = event.clientX;
-    point.y = event.clientY;
-    
-    var startPoint = point.matrixTransform(map.getScreenCTM().inverse());
-    
-    viewBox.x -= (startPoint.x - viewBox.x) * (scaleDelta - 1);
-    viewBox.y -= (startPoint.y - viewBox.y) * (scaleDelta - 1);
-    viewBox.width *= scaleDelta;
-    viewBox.height *= scaleDelta;
+    if((viewBox.width < 400 || delta >= 0) && (viewBox.width > 50 || delta <= 0))
+    {
+      if (delta) {
+        normalized = (delta % 120) == 0 ? delta / 120 : delta / 12;
+      } else {
+        delta = event.deltaY || event.detail || 0;
+        normalized = -(delta % 3 ? delta * 10 : delta / 3);
+      }
       
-    //zoom.animation = TweenLite.from(viewBox, zoom.duration, fromVars);  
+      var scaleDelta = normalized > 0 ? 1 / zoom.scaleFactor : zoom.scaleFactor;
+      
+      point.x = event.clientX;
+      point.y = event.clientY;
+      
+      var startPoint = point.matrixTransform(map.getScreenCTM().inverse());
+      
+      viewBox.x -= (startPoint.x - viewBox.x) * (scaleDelta - 1);
+      viewBox.y -= (startPoint.y - viewBox.y) * (scaleDelta - 1);
+      viewBox.width *= scaleDelta;
+      viewBox.height *= scaleDelta;
+        
+      //zoom.animation = TweenLite.from(viewBox, zoom.duration, fromVars);  
+    }
   }
 
   function windowResize(event)
@@ -57,11 +59,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function mousemove(event)
   {
+    const moveFactor = 1/707.4; //unsure why this value, but it works
     if(event.buttons == 1)
     {
-      //console.log
-      viewBox.x -= event.movementX * (viewBox.width / windowWidth);
-      viewBox.y -= event.movementY * (viewBox.height / windowHeight);
+      viewBox.x -= event.movementX * (viewBox.width *moveFactor);
+      viewBox.y -= event.movementY * (viewBox.height *moveFactor);
     }
   }
 
