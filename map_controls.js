@@ -60,10 +60,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
   function mousemove(event)
   {
     const moveFactor = 1/707.4; //unsure why this value, but it works
+    var moveX = event.movementX;
+    var moveY = event.movementY;
     if(event.buttons == 1)
     {
-      viewBox.x -= event.movementX * (viewBox.width *moveFactor);
-      viewBox.y -= event.movementY * (viewBox.height *moveFactor);
+      console.log(viewBox.width);
+      if((viewBox.x < 300 + 20000 / viewBox.width || moveX >= 0) && (viewBox.x > -300 + 20000/viewBox.width || moveX <= 0))
+      //also very arbitrary values, but it works
+        viewBox.x -= event.movementX * (viewBox.width *moveFactor);
+      if((viewBox.y < 50 + 20000 / viewBox.height || moveY >= 0) && (viewBox.y > -150 + 5000/viewBox.height || moveY <= 0))
+        viewBox.y -= event.movementY * (viewBox.height *moveFactor);     
     }
   }
 
