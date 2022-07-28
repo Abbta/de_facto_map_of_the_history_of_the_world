@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById("lbutton").addEventListener("click", lclick);
   document.getElementById("rbutton").addEventListener("click", rclick);
 
-  var year = 2021;
+  var year = 2022;
   var mapHolder = document.getElementById("map_holder");
   var yearText = document.getElementById("year");
 
@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function loadMap(yearParam)
   {
-      mapHolder.removeChild(document.getElementById("map"));
 
       const path = 'svg/' + yearParam + '.svg';
 
@@ -108,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       xhr.onload = function(e) 
       {
           // You might also want to check for xhr.readyState/xhr.status here
+          mapHolder.removeChild(document.getElementById("map"));
           mapHolder.appendChild(xhr.responseXML.documentElement);
       };
       xhr.send("");
