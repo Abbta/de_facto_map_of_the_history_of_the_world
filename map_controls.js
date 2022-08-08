@@ -64,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var moveY = event.movementY;
     if(event.buttons == 1)
     {
-      console.log(viewBox.width);
       if((viewBox.x < 300 + 20000 / viewBox.width || moveX >= 0) && (viewBox.x > -300 + 20000/viewBox.width || moveX <= 0))
       //also very arbitrary values, but it works
         viewBox.x -= event.movementX * (viewBox.width *moveFactor);
@@ -101,14 +100,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       xhr = new XMLHttpRequest();
       xhr.open("GET",path,false);
-      // Following line is just to be on the safe side;
-      // not needed if your server delivers SVG with correct MIME type
       xhr.overrideMimeType("image/svg+xml");
       xhr.onload = function(e) 
       {
-          // You might also want to check for xhr.readyState/xhr.status here
-          mapHolder.removeChild(document.getElementById("map"));
+          //When a new map has been loaded from server
+          //temporarily save the current map
+          let inactiveMap = document.getElementById("map");
+          //save its viewbox (zoom)
+          let latestViewbox = inactiveMap.viewBox.baseVal;
+          //remove current map
+          mapHolder.removeChild(inactiveMap);
+          //add new map
           mapHolder.appendChild(xhr.responseXML.documentElement);
+          //set its viewbox to that of latest map
+          let currentViewbox = document.getElementById("map").viewBox.baseVal;
+          currentViewbox.x = latestViewbox.x;
+          currentViewbox.y = latestViewbox.y;
+          currentViewbox.width = latestViewbox.width;
+          currentViewbox.height = latestViewbox.height;
       };
       xhr.send("");
       map = document.querySelector("svg");
@@ -119,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         xhr.overrideMimeType("image/svg+xml");
         xhr.onload = function(e) 
         {
-            // You might also want to check for xhr.readyState/xhr.status here
             mapHolder.appendChild(xhr.responseXML.documentElement);
         };
         xhr.send("");
